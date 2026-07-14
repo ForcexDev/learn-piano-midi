@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { ActiveNotesState } from '../types/midi';
+import { soundEngine } from '../core/soundEngine';
 
 export interface UseMidiReturn {
   activeNotes: ActiveNotesState;
@@ -40,6 +41,9 @@ export function useMidi(): UseMidiReturn {
     setMinDetectedMidi(prev => Math.min(prev, midiNumber));
     setMaxDetectedMidi(prev => Math.max(prev, midiNumber));
 
+    // Play high quality piano audio synthesis
+    soundEngine.playNote(midiNumber, velocity);
+
     addLog(`Note ON: MIDI ${midiNumber} (Vel: ${velocity})`);
   }, [addLog]);
 
@@ -49,6 +53,9 @@ export function useMidi(): UseMidiReturn {
       delete next[midiNumber];
       return next;
     });
+
+    // Release damper for note
+    soundEngine.stopNote(midiNumber);
 
     addLog(`Note OFF: MIDI ${midiNumber}`);
   }, [addLog]);

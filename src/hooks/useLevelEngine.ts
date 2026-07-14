@@ -4,6 +4,7 @@ import { ActiveNotesState, LevelConfig, LevelTarget } from '../types/midi';
 import { LEVELS } from '../data/levels';
 import { evaluateTarget, EvaluationResult } from '../core/chordDetector';
 import { useProgressStore } from '../store/progressStore';
+import { soundEngine } from '../core/soundEngine';
 
 export interface UseLevelEngineReturn {
   currentLevel: LevelConfig;
@@ -41,37 +42,44 @@ export function useLevelEngine(activeNotes: ActiveNotesState): UseLevelEngineRet
     return evaluateTarget(activeNotes, currentTarget, currentLevel.enforceInversion, language);
   }, [activeNotes, currentTarget, currentLevel.enforceInversion, language]);
 
-  // Handle auto-advancing on correct answer
+  // Handle auto-advancing on correct answer & victory SFX
   useEffect(() => {
     if (evaluation.isCorrect && currentLevelId !== 0) {
       const timer = setTimeout(() => {
         try {
           confetti({
-            particleCount: 40,
-            spread: 60,
+            particleCount: 45,
+            spread: 70,
             origin: { y: 0.8 },
-            colors: ['#10b981', '#3b82f6', '#f59e0b'],
+            colors: ['#10b981', '#3b82f6', '#f59e0b', '#ec4899'],
           });
         } catch (e) {
           // Ignore confetti errors
         }
 
+        const isLastTarget = targetIndex + 1 >= currentLevel.targets.length;
+
         setScore(prev => {
           const newCorrect = prev.correct + 1;
           const newTotal = prev.total + 1;
 
-          if (newCorrect >= currentLevel.passingCriteria.minCorrect || targetIndex + 1 >= currentLevel.targets.length) {
+          if (newCorrect >= currentLevel.passingCriteria.minCorrect || isLastTarget) {
             setIsLevelCompleted(true);
             markLevelComplete(currentLevelId, { correct: newCorrect, total: newTotal });
+            // Play victory arpeggio fanfare
+            soundEngine.playVictoryFanfare();
+          } else {
+            // Play success chime SFX
+            soundEngine.playSuccessChime();
           }
 
           return { correct: newCorrect, total: newTotal };
         });
 
-        if (targetIndex + 1 < currentLevel.targets.length) {
+        if (!isLastTarget) {
           setTargetIndex(prev => prev + 1);
         }
-      }, 500);
+      }, 450);
 
       return () => clearTimeout(timer);
     }
