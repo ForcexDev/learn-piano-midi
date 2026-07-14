@@ -49,9 +49,10 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
     const effectiveClef = propClef;
     
     // Responsive sizing logic based on window innerHeight
-    const isSmallScreen = window.innerHeight < 800 || window.innerWidth < 1280;
+    const isSmallScreen = window.innerHeight < 850 || window.innerWidth < 1280;
     const width = customWidth || (isSmallScreen ? 480 : 600);
-    const defaultHeight = isSmallScreen ? (effectiveClef === 'both' ? 220 : 150) : (effectiveClef === 'both' ? 270 : 190);
+    // Ensure sufficient height clearance for C2 ledger lines below Bass Clef
+    const defaultHeight = isSmallScreen ? (effectiveClef === 'both' ? 255 : 180) : (effectiveClef === 'both' ? 280 : 200);
     const height = customHeight || defaultHeight;
 
     try {
@@ -64,8 +65,9 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
       context.setFillStyle('#f8fafc');
 
       if (effectiveClef === 'both') {
+        // Shift Treble and Bass staves slightly upwards to give 60px bottom margin for C2 ledger lines
         const topY = isSmallScreen ? 35 : 45;
-        const spacingY = isSmallScreen ? 90 : 110;
+        const spacingY = isSmallScreen ? 85 : 100;
 
         const trebleStave = new Stave(35, topY, width - 60);
         trebleStave.addClef('treble');
@@ -122,7 +124,7 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
           }
         }
       } else {
-        const staveY = Math.max(35, (height / 2) - 35);
+        const staveY = Math.max(30, (height / 2) - 35);
         const stave = new Stave(20, staveY, width - 40);
         stave.addClef(effectiveClef).setContext(context).draw();
 
