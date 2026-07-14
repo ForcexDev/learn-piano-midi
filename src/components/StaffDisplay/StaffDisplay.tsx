@@ -47,24 +47,31 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
     const midiNumbersToRender = activeMidiNumbers.length > 0 ? activeMidiNumbers : targetMidiNumbers;
 
     const effectiveClef = propClef;
-    const width = customWidth || 600;
-    const height = customHeight || (effectiveClef === 'both' ? 290 : 200);
+    
+    // Responsive sizing logic based on window innerHeight
+    const isSmallScreen = window.innerHeight < 800 || window.innerWidth < 1280;
+    const width = customWidth || (isSmallScreen ? 480 : 600);
+    const defaultHeight = isSmallScreen ? (effectiveClef === 'both' ? 220 : 150) : (effectiveClef === 'both' ? 270 : 190);
+    const height = customHeight || defaultHeight;
 
     try {
       const renderer = new Renderer(containerRef.current, Renderer.Backends.SVG);
       renderer.resize(width, height);
       const context = renderer.getContext();
 
-      context.setFont('Arial', 11, 'bold');
+      context.setFont('Arial', isSmallScreen ? 10 : 11, 'bold');
       context.setStrokeStyle('#cbd5e1');
       context.setFillStyle('#f8fafc');
 
       if (effectiveClef === 'both') {
-        const trebleStave = new Stave(35, 55, width - 60);
+        const topY = isSmallScreen ? 35 : 45;
+        const spacingY = isSmallScreen ? 90 : 110;
+
+        const trebleStave = new Stave(35, topY, width - 60);
         trebleStave.addClef('treble');
         trebleStave.setContext(context).draw();
 
-        const bassStave = new Stave(35, 165, width - 60);
+        const bassStave = new Stave(35, topY + spacingY, width - 60);
         bassStave.addClef('bass');
         bassStave.setContext(context).draw();
 
@@ -115,7 +122,7 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
           }
         }
       } else {
-        const staveY = Math.max(45, (height / 2) - 35);
+        const staveY = Math.max(35, (height / 2) - 35);
         const stave = new Stave(20, staveY, width - 40);
         stave.addClef(effectiveClef).setContext(context).draw();
 
@@ -142,8 +149,8 @@ export const StaffDisplay: React.FC<StaffDisplayProps> = ({
   }, [activeNotes, target, propClef, customWidth, customHeight]);
 
   return (
-    <div className="w-full max-w-5xl flex flex-col items-center justify-center p-3 bg-slate-900/95 rounded-3xl border border-slate-800 shadow-2xl backdrop-blur overflow-hidden">
-      <div className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-blue-400 mb-1">
+    <div className="w-full max-w-5xl flex flex-col items-center justify-center p-2.5 sm:p-3 bg-slate-900/95 rounded-2xl sm:rounded-3xl border border-slate-800 shadow-2xl backdrop-blur overflow-hidden">
+      <div className="text-[10px] sm:text-xs uppercase tracking-widest font-bold text-blue-400 mb-0.5 sm:mb-1">
         {language === 'es' ? 'Gran Pentagrama Auténtico (Sol Arriba • Fa Abajo)' : 'Authentic Grand Staff (Treble Top • Bass Bottom)'}
       </div>
       <div ref={containerRef} className="max-w-full overflow-hidden flex justify-center items-center" />

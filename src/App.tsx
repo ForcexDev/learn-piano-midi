@@ -52,25 +52,25 @@ export function App() {
   }
 
   return (
-    <div className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col justify-between font-sans overflow-hidden selection:bg-blue-600">
+    <div className="h-screen w-screen bg-slate-950 text-slate-100 flex flex-col justify-between font-sans selection:bg-blue-600 overflow-hidden">
       {/* Top Navbar */}
-      <header className="w-full bg-slate-900/90 backdrop-blur border-b border-slate-800/80 px-4 md:px-8 py-2 flex items-center justify-between z-30 shrink-0">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
-            <Music className="w-4 h-4 text-white" />
+      <header className="w-full bg-slate-900/90 backdrop-blur border-b border-slate-800/80 px-3 sm:px-6 py-2 flex items-center justify-between z-30 shrink-0">
+        <div className="flex items-center gap-2 sm:gap-3">
+          <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/20">
+            <Music className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-white" />
           </div>
           <div>
-            <h1 className="text-sm md:text-base font-extrabold tracking-tight text-white leading-tight">
+            <h1 className="text-xs sm:text-base font-extrabold tracking-tight text-white leading-tight">
               {t.navbar.title}
             </h1>
-            <p className="text-[10px] text-slate-400 font-medium hidden sm:block">
+            <p className="text-[10px] text-slate-400 font-medium hidden md:block">
               {t.navbar.subtitle}
             </p>
           </div>
         </div>
 
         {/* Status Badge & Control Buttons */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2">
           <MidiStatusBadge
             isConnected={isConnected}
             deviceName={deviceName}
@@ -81,7 +81,7 @@ export function App() {
           {/* Quick Language Toggle Pill */}
           <button
             onClick={() => updateSettings({ language: language === 'es' ? 'en' : 'es' })}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700/80"
+            className="flex items-center gap-1 px-2 py-1 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-bold transition-all border border-slate-700/80"
             title="Toggle Language (ES / EN)"
           >
             <Globe className="w-3.5 h-3.5 text-blue-400" />
@@ -90,34 +90,34 @@ export function App() {
 
           <button
             onClick={() => setCurrentView('guide')}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-bold transition-all border border-indigo-500/30"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-bold transition-all border border-indigo-500/30"
           >
-            <BookOpen className="w-4 h-4 text-indigo-400" />
+            <BookOpen className="w-3.5 h-3.5 text-indigo-400" />
             <span className="hidden sm:inline">{t.navbar.theoryHub}</span>
           </button>
 
           <button
             onClick={() => setIsLevelModalOpen(true)}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-bold transition-all border border-blue-500/30"
+            className="flex items-center gap-1.5 px-2.5 py-1 rounded-xl bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 text-xs font-bold transition-all border border-blue-500/30"
           >
-            <ListMusic className="w-4 h-4 text-blue-400" />
+            <ListMusic className="w-3.5 h-3.5 text-blue-400" />
             <span className="hidden sm:inline">{t.navbar.levels}</span>
           </button>
 
           <button
             onClick={() => setIsSettingsOpen(true)}
-            className="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700/80"
+            className="p-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors border border-slate-700/80"
             title={t.navbar.settings}
           >
-            <Settings className="w-4 h-4" />
+            <Settings className="w-3.5 h-3.5" />
           </button>
         </div>
       </header>
 
-      {/* Main Studio Workspace - 0 Scroll No Overflow Layout */}
-      <main className="flex-1 w-full max-w-[1920px] mx-auto px-2 sm:px-4 py-1 flex flex-col justify-between items-center gap-1 overflow-hidden">
+      {/* Main Studio Workspace - Scrollable on laptop/constrained height viewports */}
+      <main className="flex-1 w-full max-w-[1920px] mx-auto px-2 sm:px-4 py-1.5 flex flex-col justify-between items-center gap-2 overflow-y-auto min-h-0">
         {/* Top HUD Card */}
-        <div className="w-full flex justify-center">
+        <div className="w-full flex justify-center shrink-0">
           <LevelHUD
             level={currentLevel}
             target={currentTarget}
@@ -132,7 +132,7 @@ export function App() {
         </div>
 
         {/* Center Authentic Grand Staff Display */}
-        <div className="w-full flex justify-center items-center py-1">
+        <div className="w-full flex justify-center items-center py-0.5 shrink-0">
           <StaffDisplay
             activeNotes={activeNotes}
             target={currentTarget}
@@ -141,7 +141,7 @@ export function App() {
         </div>
 
         {/* Bottom Full-Width Piano Keyboard */}
-        <div className="w-full px-1 sm:px-2">
+        <div className="w-full px-1 sm:px-2 shrink-0">
           <PianoKeyboard
             activeNotes={activeNotes}
             target={currentTarget}
