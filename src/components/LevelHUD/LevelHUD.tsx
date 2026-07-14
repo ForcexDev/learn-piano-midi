@@ -35,109 +35,106 @@ export const LevelHUD: React.FC<LevelHUDProps> = ({
     switch (evaluation.status) {
       case 'perfect':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold text-xs sm:text-sm animate-bounce">
-            <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-emerald-400 shrink-0" />
-            <span>{evaluation.feedback}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 font-semibold text-xs animate-bounce shrink-0">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400 shrink-0" />
+            <span className="truncate">{evaluation.feedback}</span>
           </div>
         );
       case 'missing-notes':
       case 'correct-notes-wrong-inversion':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/40 font-medium text-xs sm:text-sm">
-            <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-400 shrink-0" />
-            <span>{evaluation.feedback}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-200 border border-amber-500/40 font-medium text-xs shrink-0">
+            <AlertCircle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="truncate">{evaluation.feedback}</span>
           </div>
         );
       case 'extra-notes':
       case 'incorrect':
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-rose-500/20 text-rose-200 border border-rose-500/40 font-medium text-xs sm:text-sm">
-            <AlertCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-rose-400 shrink-0" />
-            <span>{evaluation.feedback}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-500/20 text-rose-200 border border-rose-500/40 font-medium text-xs shrink-0">
+            <AlertCircle className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+            <span className="truncate">{evaluation.feedback}</span>
           </div>
         );
       case 'waiting':
       default:
         return (
-          <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80 font-normal text-xs sm:text-sm">
-            <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-slate-400 shrink-0" />
-            <span>{evaluation.feedback}</span>
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-800/90 text-slate-300 border border-slate-700/80 font-normal text-xs shrink-0">
+            <HelpCircle className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <span className="truncate">{evaluation.feedback}</span>
           </div>
         );
     }
   };
 
   return (
-    <div className="w-full max-w-5xl bg-slate-900/95 backdrop-blur border border-slate-800 rounded-2xl sm:rounded-3xl p-3 sm:p-4 md:p-5 shadow-2xl flex flex-col gap-2 sm:gap-3">
-      {/* Level Header Banner & Change Button */}
-      <div className="flex flex-wrap items-center justify-between border-b border-slate-800/80 pb-2 gap-2">
-        <div className="flex items-center gap-2 text-xs font-bold text-blue-400">
-          <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-blue-400" />
-          <span className="truncate max-w-xs sm:max-w-md">{level.title[language]}</span>
-        </div>
-
+    <div className="w-full max-w-[1920px] bg-slate-900/95 backdrop-blur border border-slate-800 rounded-2xl p-2.5 sm:p-3 shadow-2xl flex flex-col gap-1.5 sm:gap-2">
+      {/* Top Header Bar: Title, Score Badge & Control Buttons on a single row */}
+      <div className="flex items-center justify-between border-b border-slate-800/80 pb-1.5 gap-2 flex-wrap">
         <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-blue-400">
+            <BookOpen className="w-3.5 h-3.5 text-blue-400 shrink-0" />
+            <span className="truncate max-w-xs sm:max-w-md md:max-w-lg">{level.title[language]}</span>
+          </div>
+
           <button
             onClick={onOpenLevelModal}
-            className="text-[11px] sm:text-xs font-bold text-blue-300 bg-blue-600/20 hover:bg-blue-600/30 px-2.5 py-0.5 sm:py-1 rounded-full border border-blue-500/30 transition-colors"
+            className="text-[11px] font-bold text-blue-300 bg-blue-600/20 hover:bg-blue-600/30 px-2.5 py-0.5 rounded-full border border-blue-500/30 transition-colors shrink-0"
           >
             {t.changeLevel}
           </button>
         </div>
-      </div>
 
-      {/* Main Target Goal Card & Instructions */}
-      <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3 md:gap-4">
-        <div className="space-y-1 sm:space-y-1.5 flex-1">
-          {/* Goal Title in English Note Notation (e.g. Play: F# Minor) */}
-          <h2 className="text-xl sm:text-2xl md:text-3xl font-black tracking-tight text-white drop-shadow">
-            {target.label}
-          </h2>
-
-          {/* Educational Target Explanation in Selected Language */}
-          {target.explanation && (
-            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed bg-slate-950/60 p-2 sm:p-2.5 rounded-xl border border-slate-800/90">
-              <span className="text-blue-400 font-bold">{t.lessonGuidance} </span>
-              {target.explanation[language]}
-            </p>
-          )}
-
-          {/* Status Feedback Badge */}
-          <div className="pt-0.5">
-            {getStatusBadge()}
-          </div>
-        </div>
-
-        {/* Right Side: Level Score & Control Buttons */}
-        <div className="flex flex-col items-start md:items-end gap-2 shrink-0 self-stretch justify-between">
-          <div className="flex items-center gap-2.5 bg-slate-950/80 px-3 py-1.5 rounded-xl sm:rounded-2xl border border-slate-800 w-full md:w-auto justify-between md:justify-end">
-            <div className="flex items-center gap-1.5 text-emerald-400 font-bold text-xs">
+        {/* Right Header Side: Score & Controls */}
+        <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 bg-slate-950/80 px-3 py-1 rounded-xl border border-slate-800">
+            <div className="flex items-center gap-1 text-emerald-400 font-bold text-xs">
               <Award className="w-3.5 h-3.5 text-emerald-400" />
               <span>{t.passed} {score.correct} / {level.passingCriteria.minCorrect}</span>
             </div>
-            <div className="w-px h-3.5 bg-slate-800" />
-            <div className="text-[11px] sm:text-xs text-slate-400 font-medium">
+            <div className="w-px h-3 bg-slate-800" />
+            <div className="text-[11px] text-slate-400 font-medium">
               {t.targetOf} {targetIndex + 1} {t.of} {totalTargets}
             </div>
           </div>
 
-          <div className="flex items-center gap-2 w-full md:w-auto">
-            <button
-              onClick={onRepeatTarget}
-              className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all border border-slate-700/80"
-            >
-              <RotateCcw className="w-3.5 h-3.5" />
-              {t.restartLevel}
-            </button>
-            <button
-              onClick={onNextTarget}
-              className="flex-1 md:flex-initial flex items-center justify-center gap-1.5 text-xs font-bold px-3.5 py-1.5 rounded-xl bg-blue-600 text-white hover:bg-blue-500 transition-all shadow-md shadow-blue-600/30"
-            >
-              {t.skipTarget}
-              <SkipForward className="w-3.5 h-3.5" />
-            </button>
+          <button
+            onClick={onRepeatTarget}
+            className="flex items-center gap-1 text-xs font-semibold px-2.5 py-1 rounded-xl bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white transition-all border border-slate-700/80"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">{t.restartLevel}</span>
+          </button>
+
+          <button
+            onClick={onNextTarget}
+            className="flex items-center gap-1 text-xs font-bold px-3 py-1 rounded-xl bg-blue-600 text-white hover:bg-blue-500 transition-all shadow-md shadow-blue-600/30"
+          >
+            <span>{t.skipTarget}</span>
+            <SkipForward className="w-3.5 h-3.5" />
+          </button>
+        </div>
+      </div>
+
+      {/* Wide Horizontal Main Grid: Expanding into yellow side boxes */}
+      <div className="grid grid-cols-1 md:grid-cols-12 items-center gap-2 sm:gap-4">
+        {/* Left Side (Col 1-5): Target Title + Feedback Status */}
+        <div className="md:col-span-5 space-y-1">
+          <h2 className="text-lg sm:text-xl md:text-2xl font-black tracking-tight text-white drop-shadow truncate">
+            {target.label}
+          </h2>
+          <div>
+            {getStatusBadge()}
           </div>
         </div>
+
+        {/* Right Side (Col 6-12): Lesson Guidance Text expanding across wide screen */}
+        {target.explanation && (
+          <div className="md:col-span-7 bg-slate-950/70 p-2 sm:p-2.5 rounded-xl border border-slate-800/90 text-xs sm:text-sm text-slate-300 font-medium leading-snug">
+            <span className="text-blue-400 font-bold">{t.lessonGuidance} </span>
+            {target.explanation[language]}
+          </div>
+        )}
       </div>
     </div>
   );
